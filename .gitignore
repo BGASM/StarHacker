@@ -6,3 +6,6 @@
 /*.zip
 bin/
 build/
+/.idea/
+/out/
+/StarHacker.iml

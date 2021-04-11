@@ -1,0 +1,38 @@
+id,trigger,conditions,script,text,options,notes
+#RULESET_NAME StarHack,,,,,,
+SH_virusOpt,COB_AddOptions,"$faction.id != player
+!$cob_hacked
+!$objectiveNonFunctional",,,15:SH_virus:Upload a virus to the server,
+SH_removeVirusOpt,COB_AddOptions,"$tag:comm_relay
+$cob_hacked",,,15:SH_removeVirus:Remove virus from server,
+SH_hackSel,DialogOptionSelected,$option == SH_virus,"$SH_action = uploadVirus 0
+FireBest SH_ConfirmPrompt
+FireBest SH_ConfirmOptions",,,
+SH_unhackSel,DialogOptionSelected,$option == SH_removeVirus,"$SH_action = removeVirus 0
+FireBest SH_ConfirmPrompt
+FireBest SH_ConfirmOptions",,,
+SH_confirmOpts,SH_ConfirmOptions,,,,"SH_confirmAction:Proceed
+COB_cancelAction:Never mind",
+SH_hackPrompt,SH_ConfirmPrompt,"$SH_action == virus
+!$tag:comm_relay",,"Hacking a $shortName will surreptitiuously provide your fleets with the same benefits as the faction that currently controls it.
+
+The hack will eventually be picked up and cleared out by maintenance subroutines, but should remain effective for at least three months.",,
+SH_hackPrompt2,SH_ConfirmPrompt,"$SH_action == virus
+$tag:comm_relay",,"Installing a comm sniffer will give you access to local intel as if you were in this star system.
+
+The comm sniffer will remain active until it is detected and cleared out by the comm network's maintenance subroutines. The odds of this happening increase drastically when comm sniffers are installed on multiple relays in the network.",,
+SH_hackPrompt3,SH_ConfirmPrompt,"$SH_action == removeVirus
+$tag:comm_relay",,Uninstalling this comm sniffer will reduce the overall detectablility of your other sniffers by the comm network maintenance protocols.,,
+SH_confirmSel,DialogOptionSelected,$option == SH_confirmAction,"FireBest SH_PreActionDesc
+SH_Virus doAction $SH_action
+FireBest SH_PostActionDesc
+FireAll COB_AddOptions
+FireBest COB_DisableOptionsIfNeeded
+FireAll COB_DisableIndividualOptions",,,
+SH_snifferDesc,SH_PreActionDesc,"$SH_action == virus
+$tag:comm_relay",,"A quick scan on the maintenance shortwave reveals several common vulnerabilities to choose from, and the sniffer script is uploaded within a few minutes.",,
+SH_snifferDesc2,SH_PostActionDesc,"$SH_action == virus
+$tag:comm_relay",,A soft chime from the comms console indicates the sniffer is installed and fully operational.,,
+SH_snifferDesc3,SH_PostActionDesc,"$SH_action == removeVirus
+$tag:comm_relay",,A soft chime from the comms console indicates the sniffer is offline.,,
+SH_hackDesc,SH_PreActionDesc,$SH_action == virus,,"A quick scan on the maintenance shortwave reveals several common vulnerabilities to choose from. Your comms officers installs the data-collection script, and confirms receipt of telemetry from the $shortName.",,

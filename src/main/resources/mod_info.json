@@ -1,1 +1,11 @@
-{}
+{
+    "id": "starhacker",
+    "name": "StarHacker",
+    "author": "Beargasm",
+    "utility": true,
+    "version": "0.1.0",
+    "description": "Hacking Expansion Mod",
+    "gameVersion": "0.95a-RC12",
+    "modPlugin":"starhacker.StarHackerPlugin",
+    "jars": ["starhacker.jar"]
+}
