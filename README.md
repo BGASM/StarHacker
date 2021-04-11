@@ -8,7 +8,7 @@ welcome.</p>
 sabotage foes, and snoop up intel. At the same time, all of these aspects should carry risk and require planning and
 strategy.</p>
 
-![alt text](resources/cowboy.png "Cowboy")
+![alt text](./resources/cowboy.png "Cowboy")
 Inspiration for this comes from books, television, and MUDs I have enjoyed, including:
 - Neuromancer, William Gibson  
 - Snow Crash, Neal Stephenson 

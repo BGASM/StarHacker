@@ -63,7 +63,6 @@ public class SH_Virus extends BaseCommandPlugin {
             String concat = name +" - "+ star + " - " + " - " + fac +":"+d;
             Global.getLogger(StarHackerPlugin.class).info(concat);
         }
-
     }
 
 
