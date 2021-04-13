@@ -1,12 +1,12 @@
 
 {
-    "masterVersionFile":"https://raw.githubusercontent.com/BGASM/StarHacker/master/src/main/resources/starhacker.version",
+    "masterVersionFile":"http://raw.githubusercontent.com/BGASM/StarHacker/master/src/main/resources/starhacker.version",
     "modName":"Star Hacker",
     "modThreadId":xxxxx,
     "modVersion":
     {
         "major":0,
         "minor":1,
-        "patch":0
+        "patch":2
     }
 }

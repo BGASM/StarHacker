@@ -1,19 +1,26 @@
 package starhacker.helper;
+
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.FactionAPI;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
+import org.apache.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 import org.lazywizard.lazylib.MathUtils;
+
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
-
+/**
+ * Code shamelessly stolen from LazyWizard's Lazy Lib Libraries.
+ */
+@SuppressWarnings("unchecked")
 public class CampaignHelper {
+    public static Logger log = Global.getLogger(CampaignHelper.class);
     @Nullable
     public static <T extends SectorEntityToken> T getNearestEntityWithTagHyper(
-            SectorEntityToken token, String entityTag)
-    {
+            SectorEntityToken token, String entityTag){
         T closest = null;
         float distanceSquared, closestDistanceSquared = Float.MAX_VALUE;
 
@@ -53,8 +60,7 @@ public class CampaignHelper {
      * @since 2.0
      */
     public static <T extends SectorEntityToken> List<T> getNearbyEntitiesWithTagHyper(
-            SectorEntityToken token, float range, String entityTag)
-    {
+            SectorEntityToken token, float range, String entityTag){
         List<T> entities = new ArrayList<>();
 
         // Find all tokens of the given type within range
@@ -94,8 +100,7 @@ public class CampaignHelper {
      */
     @Nullable
     public static <T extends SectorEntityToken> T getNearestEntityFromFactionHyper(
-            SectorEntityToken token, String entityTag, FactionAPI faction)
-    {
+            SectorEntityToken token, String entityTag, FactionAPI faction){
         T closest = null;
         float distanceSquared, closestDistanceSquared = Float.MAX_VALUE;
 
@@ -136,8 +141,7 @@ public class CampaignHelper {
      * @since 2.0
      */
     public static <T extends SectorEntityToken> List<T> getNearbyEntitiesFromFactionHyper(
-            SectorEntityToken token, float range, String entityTag, FactionAPI faction)
-    {
+            SectorEntityToken token, float range, String entityTag, FactionAPI faction){
         List<T> entities = new ArrayList<>();
 
         // Find all tokens of the given type within range
@@ -178,8 +182,7 @@ public class CampaignHelper {
      * @since 2.0
      */
     public static <T extends SectorEntityToken> List<T> getAllEntitiesFromFactionHyper(
-            SectorEntityToken token, String entityTag, FactionAPI faction)
-    {
+            SectorEntityToken token, String entityTag, FactionAPI faction){
         List<T> entities = new ArrayList<>();
 
         // Find all tokens of the given type within range
@@ -197,6 +200,17 @@ public class CampaignHelper {
             Collections.sort(entities, new DistanceHelper.SortTokensByHyperDistance(token));
         }
         return entities;
+    }
+
+    public static HashMap<String, String> strEntity(SectorEntityToken token, float distance){
+        log.info(token);
+        HashMap<String, String> map = new HashMap<>();
+        map.put("system", token.getStarSystem().getBaseName());
+        map.put("name", token.getName());
+        map.put("faction", token.getFaction().getDisplayName());
+        map.put("distance",  String.valueOf(distance));
+        log.info(map);
+        return map;
     }
 }
 
