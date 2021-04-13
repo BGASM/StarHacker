@@ -9,3 +9,6 @@ build/
 /.idea/
 /out/
 /StarHacker.iml
+/data/
+/starhacker.version
+/mod_info.json

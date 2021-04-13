@@ -12,8 +12,11 @@ import starhacker.StarHackerPlugin;
 import starhacker.helper.CampaignHelper;
 
 import java.util.*;
-
-public class SH_Virus extends BaseCommandPlugin {
+/*  Rulescmd was not giving me quite what I wanted for this project.
+    I'm keeping the source up in case I decide to come back to it.
+    Instead I'm using custom tags, abilities, and dialog interactions.
+ */
+@Deprecated class SH_Virus extends BaseCommandPlugin {
     protected CampaignFleetAPI playerFleet;
     protected SectorEntityToken entity;
     protected FactionAPI playerFaction;
@@ -29,15 +32,14 @@ public class SH_Virus extends BaseCommandPlugin {
     protected List<String> filters = Arrays.asList("comm_relay", "sensor_array", "nav_buoy");
     protected List<SectorEntityToken> nearby;
 
-    public SH_Virus() {
-
+    @Deprecated public SH_Virus() {
     }
 
-    public SH_Virus(SectorEntityToken entity) {
+    @Deprecated public SH_Virus(SectorEntityToken entity) {
         init(entity);
     }
 
-    protected void init(SectorEntityToken entity) {
+    @Deprecated protected void init(SectorEntityToken entity) {
         memory = entity.getMemoryWithoutUpdate();
         this.entity = entity;
         entityFaction = entity.getFaction();
@@ -65,8 +67,7 @@ public class SH_Virus extends BaseCommandPlugin {
         }
     }
 
-
-    public boolean execute(String ruleId, InteractionDialogAPI dialog, List<Misc.Token> params, Map<String, MemoryAPI> memoryMap) {
+    @Deprecated public boolean execute(String ruleId, InteractionDialogAPI dialog, List<Misc.Token> params, Map<String, MemoryAPI> memoryMap) {
 
         this.dialog = dialog;
         this.memoryMap = memoryMap;
@@ -95,22 +96,21 @@ public class SH_Virus extends BaseCommandPlugin {
         return true;
     }
 
-    public void removeVirus() {
+    @Deprecated public void removeVirus() {
         CommSnifferIntel intel = CommSnifferIntel.getExistingSnifferIntelForRelay(entity);
         if (intel != null) {
             intel.uninstall();
-            updateMemory();
         } else {
             CustomCampaignEntityPlugin plugin = entity.getCustomPlugin();
             if (plugin instanceof CampaignObjective) {
                 CampaignObjective o = (CampaignObjective) plugin;
                 o.setHacked(false);
             }
-            updateMemory();
         }
+        updateMemory();
     }
 
-    public void uploadVirus() {
+    @Deprecated public void uploadVirus() {
         List<SectorEntityToken> tmp = new ArrayList<>(nearby);
         tmp.add(entity);
         for (SectorEntityToken s : tmp) {
@@ -124,7 +124,7 @@ public class SH_Virus extends BaseCommandPlugin {
         updateMemory();
     }
 
-    public boolean isHacked() {
+    @Deprecated public boolean isHacked() {
         CustomCampaignEntityPlugin plugin = entity.getCustomPlugin();
         if (plugin instanceof CampaignObjective) {
             CampaignObjective o = (CampaignObjective) plugin;
@@ -133,7 +133,7 @@ public class SH_Virus extends BaseCommandPlugin {
         return false;
     }
 
-    public void updateMemory() {
+    @Deprecated public void updateMemory() {
         //memory.set("$cob_hacked", isHacked(), 0f);
         //memory.set(BaseCampaignObjectivePlugin.HACKED, isHacked(), 0f);
     }

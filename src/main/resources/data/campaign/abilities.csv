@@ -1,0 +1,2 @@
+name,id,type,tags,activationDays,activationCooldown,durationDays,deactivationDays,deactivationCooldown,unlockedAtStart,defaultForAIFleet,musicSuppression,uiOn,uiOff,uiLoop,worldOn,worldOff,worldLoop,icon,plugin,ai,desc,sortOrder
+Hack,starhack,DURATION,,0,,0,0,0.2,TRUE,,,ui_scavenge_on,,,,,,graphics/icons/abilities/hack_icon.png,starhacker.impl.campaign.abilities.StarHackAbility,,Launch scripts against your target.,850

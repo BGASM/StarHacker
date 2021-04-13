@@ -4,9 +4,10 @@ import com.fs.starfarer.api.campaign.SectorEntityToken;
 import org.lazywizard.lazylib.MathUtils;
 import org.lwjgl.util.vector.Vector2f;
 
-
 import java.util.Comparator;
-
+/**
+ * Code shamelessly stolen from LazyWizard's Lazy Lib and modified to return vast interstellar distances.
+ */
 public class DistanceHelper {
 
     /**
@@ -27,8 +28,7 @@ public class DistanceHelper {
      *
      * @since 1.8
      */
-    public static boolean isWithinRangeHyper(SectorEntityToken token1, SectorEntityToken token2, float range)
-    {
+    public static boolean isWithinRangeHyper(SectorEntityToken token1, SectorEntityToken token2, float range){
         return MathUtils.isWithinRange(token1.getLocationInHyperspace(), token2.getLocationInHyperspace(),
                 (range + token1.getRadius() + token2.getRadius()));
     }
@@ -49,12 +49,9 @@ public class DistanceHelper {
      *
      * @since 1.8
      */
-    public static boolean isWithinRangeHyper(SectorEntityToken token, Vector2f loc, float range)
-    {
+    public static boolean isWithinRangeHyper(SectorEntityToken token, Vector2f loc, float range){
         return MathUtils.isWithinRange(token.getLocationInHyperspace(), loc, (range + token.getRadius()));
     }
-
-
 
     public static class SortTokensByHyperDistance implements Comparator<SectorEntityToken>
     {

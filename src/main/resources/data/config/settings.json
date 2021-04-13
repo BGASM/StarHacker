@@ -1,5 +1,7 @@
 {
-"ruleCommandPackages":[
-"starhacker.data.campaign.rulecmd"
-]
+	"graphics":{
+		"abilities":{
+			"starhack":"graphics/icons/abilities/hack_icon.png"
+		}
+	}
 }
