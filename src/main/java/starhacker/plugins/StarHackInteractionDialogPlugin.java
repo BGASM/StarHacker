@@ -8,39 +8,36 @@ import com.fs.starfarer.api.impl.campaign.CampaignObjective;
 import com.fs.starfarer.api.util.Misc;
 import com.fs.starfarer.api.util.Pair;
 import org.apache.log4j.Logger;
+import org.lazywizard.lazylib.CollectionUtils;
 import starhacker.helper.StringHelper;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 /**
 *    Dialog code shameless stolen from Kentington's Capture Officers and Crew mod.
 */
-public class StarHackInteractionDialogPlugin implements InteractionDialogPlugin {
+public class StarHackInteractionDialogPlugin implements InteractionDialogPlugin, Cloneable {
     public static final int ENTRIES_PER_PAGE = 6;
     public static Logger log = Global.getLogger(StarHackInteractionDialogPlugin.class);
+    protected static Collection<String> filter = Arrays.asList("comm_relay", "sensor_array", "nav_buoy");
     protected static String STRING = "sh_hackdialogue";
-    protected static String RELAY = "comm_relay";
-    protected static String SENSOR = "sensor_array";
-    protected static String NAV ="nav_buoy";
+
     protected InteractionDialogAPI dialog;
-    protected HacksPlugin hacks = new HacksPlugin();
+
     protected TextPanelAPI text;
     protected OptionPanelAPI options;
-    protected String token_id;
+    protected SectorEntityToken token;
     protected ArrayList<Menu> currentMenu = new ArrayList<>();
 
-    protected List<Pair<String, String>> optionsList = new ArrayList<>();
+    protected List<Pair<String, Object>> optionsList = new ArrayList<>();
     protected int currentPage = 1;
     protected CampaignFleetAPI fleet;
-    protected List<String> nearby;
-    protected List<String> net_nearby = new ArrayList<>();
-    public StarHackInteractionDialogPlugin(CampaignFleetAPI theFleet, List<String> nearbyTargets)
+    protected Collection<SectorEntityToken> nearby;
+    protected List<SectorEntityToken> target_group;
+    public StarHackInteractionDialogPlugin(CampaignFleetAPI theFleet, List<SectorEntityToken> nearbyTargets)
     {
-        this.fleet = theFleet;
-        this.nearby = nearbyTargets;
-        log.info(nearby);
+        fleet = theFleet;
+        nearby = nearbyTargets;
     }
 
     public static String getString(String id) {
@@ -52,10 +49,9 @@ public class StarHackInteractionDialogPlugin implements InteractionDialogPlugin 
     }
 
     protected void populateOptions() {
-        this.options.clearOptions();
-        if(currentMenu.get(currentMenu.size() -1) != null) {
-            log.info(currentMenu.get(currentMenu.size() -1));
-            switch (currentMenu.get(currentMenu.size() -1)) {
+        options.clearOptions();
+        if(currentMenuIndex() != null) {            
+            switch (currentMenuIndex()) {
                 case ACCESS:
                     populateHackingOptions();
                     break;
@@ -68,54 +64,36 @@ public class StarHackInteractionDialogPlugin implements InteractionDialogPlugin 
                 default:
                     populateConfirmCancel();
             }
-        }else {populateConfirmCancel();}
+        }else {dialog.dismiss();}
     }
 
-
     protected void populateHackingOptions() {
-        log.info("Populate Hacks");
-        Pair<String, List<String>> trace_data = new Pair<>();
-        /* SectorEntityToken token = Global.getSector().getEntityById(token_id);
-         * CustomCampaignEntityPlugin plugin = token.getCustomPlugin();
-         * Collection<String> obj_tags = token.getTags(); */
-        Collection<String> obj_tags = Global.getSector().getEntityById(token_id).getTags();
-        /* if (plugin instanceof CampaignObjective) {
-            if(((CampaignObjective) plugin).isHacked()){
+        CustomCampaignEntityPlugin plugin = token.getCustomPlugin();
+        if (plugin instanceof CampaignObjective) {
+            if (((CampaignObjective) plugin).isHacked())
                 options.addOption("Remove the uploaded virus", Menu.REMOVE);
-            }*/
-                /**Removing this check as well just to test if I get any closer to figuring out where the entities
-                are getting nullified. It was to check if entities where base campaign plugins, which I would
-                have different types of hacks for vs Fleets or Markets. The Remove Virus depended on having an instance
-                 of CampaignObjective. Once I figure out what's going on I'll replace it.*/
-        /**
-         * This block of code checks if the targets have tags that determine what hacks are available. Right now, I have
-         * them all just calling the default setHacked(true) function, to test this all out. This also originially passed
-         * The SectorEntityToken, but now sends a string of its ID instead. runTrace looks for similar entities belonging
-         * to the local one's Faction. It searches across Hyperspace and returns their names, distance, and entityId.
-          */
-        if(obj_tags.contains(RELAY)){
-                trace_data = hacks.runTrace(token_id);
-                options.addOption("Upload a virus", Menu.UPLOAD);
-            }else if (obj_tags.contains(NAV)){
-                trace_data = hacks.runTrace(token_id);
-                options.addOption("Upload a virus <Nothing fun implemented yet.>", Menu.UPLOAD);
-            }else if (obj_tags.contains(SENSOR)){
-                trace_data = hacks.runTrace(token_id);
-                options.addOption("Upload a virus <Nothing fun implemented yet.>", Menu.UPLOAD);
+
+            Collection<String> filters = filter;
+            Pair<String, Collection<SectorEntityToken>> trace_data = null;
+            String type = token.getCustomEntityType();
+            if (filters.contains(type)) {
+                trace_data = HacksPlugin.runTrace(token, type);
+                options.addOption("Upload a virus.", Menu.UPLOAD);
             }
-            if (trace_data != null){
+            if (trace_data != null) {
                 String str = trace_data.one;
-                net_nearby = trace_data.two;
+                target_group = CollectionUtils.combinedList(trace_data.two, Collections.singletonList(token));
                 text.addParagraph(str);
-            }
-        //}
+            } else
+                dialog.dismissAsCancel();
+        }
         addBackOption();
     }
 
     protected void populateConfirmCancel() {
-        this.options.clearOptions();
-        this.options.addOption("Confirm", Menu.CONFIRM);
-        this.addBackOption();
+        options.clearOptions();
+        options.addOption("Confirm", Menu.CONFIRM);
+        addBackOption();        
     }
 
     /**
@@ -123,15 +101,14 @@ public class StarHackInteractionDialogPlugin implements InteractionDialogPlugin 
      * selection options.
      */
     protected void populateMainMenuOptions() {
-        this.optionsList.clear();
+        optionsList.clear();
         text.addParagraph( getString("hack_prompt"));
-        dialog.setPromptText(Misc.ucFirst("Options"));
-        for (String s : this.nearby) {
-            SectorEntityToken token = Global.getSector().getEntityById(s);
+        
+        for (SectorEntityToken token : this.nearby) {
             String name_fac = token.getName() + " - " + token.getFaction().getDisplayName();
-            optionsList.add(new Pair<>(name_fac, s));
+            optionsList.add(new Pair<String, Object> (name_fac, token));
         }
-        this.showPaginatedMenu();
+        showPaginatedMenu();
     }
 
     /**
@@ -147,16 +124,17 @@ public class StarHackInteractionDialogPlugin implements InteractionDialogPlugin 
      * Generates the dialog on initialization. No idea what any of this does, I copied this lol. I do know that I set
      * the currentMenu to INIT which was the enum I used to point to loading my 'first' page.
      *
-     * @param dialog who knows....?
+     * @param dialog_in who knows....?
      */
-    public void init(InteractionDialogAPI dialog) {
-        log.info("In Dialog Init.");
-        this.dialog = dialog;
-        options = this.dialog.getOptionPanel();
-        text = this.dialog.getTextPanel();
-        this.dialog.getVisualPanel().setVisualFade(0.25F, 0.25F);
+    public void init(InteractionDialogAPI dialog_in) {        
+        dialog = dialog_in;
+        options = dialog.getOptionPanel();
+        text = dialog.getTextPanel();
+        dialog.getVisualPanel().setVisualFade(0.25F, 0.25F);
+        dialog.setPromptText(Misc.ucFirst("Options"));
+        // Initialize the Dialog API and then call our first page.
         currentMenu.add(Menu.INIT);
-        populateOptions();
+        populateOptions();        
     }
 
     /**
@@ -178,31 +156,27 @@ public class StarHackInteractionDialogPlugin implements InteractionDialogPlugin 
      * function is called. Otherwise, it loads whatever menu was on the index.
      */
     public void optionSelected(String optionText, Object optionData) {
-        if (optionText != null) {
+        int oldPage = currentPage;
+        currentPage = 1;
+        if (optionText != null)
             text.addParagraph(optionText, Global.getSettings().getColor("buttonText"));
-        }
 
         if (optionData instanceof Menu) {
             Menu option = (Menu) optionData;
             switch (option) {
                 case NEXT:
-                    ++currentPage;
+                    currentPage = oldPage +1;
                     showPaginatedMenu();
-                    return;
+                    break;
                 case PREVIOUS:
-                    --currentPage;
+                    currentPage = oldPage - 1;
                     showPaginatedMenu();
-                    return;
-                default:
-                    currentPage = 1;
-                }
-            switch (option) {
+                    break;
                 case BACK:
-                    if (currentMenu.get(currentMenu.size() -1) == Menu.EXIT || currentMenu.get(currentMenu.size() -1) == Menu.INIT) {
-                        this.dialog.dismiss();
-                    } else {
+                    if (currentMenuIndex() == Menu.EXIT || currentMenuIndex() == Menu.INIT)
+                        dialog.dismissAsCancel();
+                    else
                         currentMenu.remove(currentMenu.size() -1);
-                    }
                     break;
                 case UPLOAD:
                     text.addParagraph("You select a virus and enter the commands to upload it.");
@@ -213,33 +187,28 @@ public class StarHackInteractionDialogPlugin implements InteractionDialogPlugin 
                     currentMenu.add(Menu.REMOVE);
                     break;
                 case CONFIRM:
-                    switch (currentMenu.get(currentMenu.size() -1)){
+                    switch (currentMenuIndex()){
                         case UPLOAD:
-                            text.addParagraph("You hit return, and a few moments later your hear a hum of confirmation.");
-                            hacks.uploadVirus(net_nearby);
-                            currentMenu.add(Menu.EXIT);
+                            HacksPlugin.uploadVirus(target_group);
                             break;
                         case REMOVE:
-                            text.addParagraph("You hit return, and a few moments later your hear a hum of confirmation.");
-                            hacks.removeVirus(token_id);
-                            currentMenu.add(Menu.EXIT);
+                            HacksPlugin.removeVirus(token);
                             break;
                         default:
-                            currentMenu.add(Menu.EXIT);
+                            text.addParagraph("You realize you don't have the right scripts.");
                     }
-
+                    text.addParagraph("You hit return, and a few moments later your hear a hum of confirmation.");
+                    currentMenu.add(Menu.EXIT);
             }
-        } else if (optionData instanceof String) {  // This also was originally checking instanceof SectorEntityToken
-            String str;                             // which was initially passed as an object.
-            currentPage = 1;
+        } else if (optionData instanceof SectorEntityToken) {
             currentMenu.add(Menu.ACCESS);
-            token_id = (String)optionData;
-            str = getString("access_network");
-            str = StringHelper.substituteToken(str, "$target", Global.getSector().getEntityById(token_id).getName());
-            text.addParagraph(str);
-            str = getString("access_network2");
-            text.addParagraph(str);
-        }
+            token = (SectorEntityToken)optionData;
+            text.addParagraph(StringHelper.substituteToken(getString("access_network"),
+                    "$target", (token.getName())));
+            text.addParagraph(getString("access_network2"));
+        } else
+            log.info("Called unexpected option: " + optionData.toString() + ".");
+
         populateOptions();
     }
 
@@ -256,7 +225,7 @@ public class StarHackInteractionDialogPlugin implements InteractionDialogPlugin 
             }
 
             for (int x = offset; x < max; ++x) {
-                Pair<String, String> entry = optionsList.get(x);
+                Pair<String, Object> entry = optionsList.get(x);
                 options.addOption(entry.one, entry.two);
             }
 
@@ -297,6 +266,10 @@ public class StarHackInteractionDialogPlugin implements InteractionDialogPlugin 
     public Map<String, MemoryAPI> getMemoryMap() {
         return null;
     }
+    
+    protected Menu currentMenuIndex(){
+        return currentMenu.get(currentMenu.size() -1);
+    }
 
     /**
      * Menu Enums.
@@ -312,6 +285,4 @@ public class StarHackInteractionDialogPlugin implements InteractionDialogPlugin 
         CONFIRM,
         EXIT
     }
-
-
 }

@@ -10,6 +10,7 @@ import com.fs.starfarer.api.util.Misc;
 import org.lazywizard.lazylib.MathUtils;
 import starhacker.StarHackerPlugin;
 import starhacker.helper.CampaignHelper;
+import starhacker.plugins.HacksPlugin;
 
 import java.util.*;
 /*  Rulescmd was not giving me quite what I wanted for this project.
@@ -97,16 +98,7 @@ import java.util.*;
     }
 
     @Deprecated public void removeVirus() {
-        CommSnifferIntel intel = CommSnifferIntel.getExistingSnifferIntelForRelay(entity);
-        if (intel != null) {
-            intel.uninstall();
-        } else {
-            CustomCampaignEntityPlugin plugin = entity.getCustomPlugin();
-            if (plugin instanceof CampaignObjective) {
-                CampaignObjective o = (CampaignObjective) plugin;
-                o.setHacked(false);
-            }
-        }
+        HacksPlugin.getCommSnifferIntel(entity);
         updateMemory();
     }
 

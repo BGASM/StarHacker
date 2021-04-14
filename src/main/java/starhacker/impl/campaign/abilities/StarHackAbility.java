@@ -9,7 +9,6 @@ import org.apache.log4j.Logger;
 import org.lazywizard.lazylib.campaign.CampaignUtils;
 import starhacker.plugins.StarHackInteractionDialogPlugin;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,23 +34,13 @@ public class StarHackAbility extends BaseDurationAbility {
     protected void activateImpl()
     {
         if (this.entity.isPlayerFleet()) {
-            // Global.getSector().addPing(entity, "interdict"); // How do I delay the dialog box so we can see ping?
-            // I just wanted a visual effect, but the dialog loads before the effect gets to play.
+            Global.getSector().addPing(entity, "interdict"); // How do I delay the dialog box so we can see ping?
+            log.info(this.entity.getSensorStrength());
             CampaignFleetAPI fleet = this.getFleet();
             nearby = CampaignUtils.getNearbyEntitiesWithTag(fleet, 3.4028235E38F, TAG); // wtf is Range in? LY?
-            log.info(nearby);
-            List<String> target_id = new ArrayList<>();
-            for (SectorEntityToken s : nearby) {
-                target_id.add(s.getId());
-            }
             Global.getSector().getCampaignUI().showInteractionDialog(
-                    new StarHackInteractionDialogPlugin(fleet, target_id), fleet);
+                    new StarHackInteractionDialogPlugin(fleet, nearby), fleet);
         }
-        log.info(nearby);   /* * * * * * *
-                            * <- This was to check if I was losing the entities when the dialog finished. I learned
-                            *     that the ability function ends immediately and that the Interaction is a separate
-                            *     process.
-                            * * * * * */
     }
 
     protected void applyEffect(float arg0, float arg1) {
