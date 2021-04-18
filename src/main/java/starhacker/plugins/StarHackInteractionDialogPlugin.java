@@ -4,12 +4,13 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.*;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.combat.EngagementResultAPI;
-import com.fs.starfarer.api.impl.campaign.CampaignObjective;
 import com.fs.starfarer.api.util.Misc;
 import com.fs.starfarer.api.util.Pair;
 import org.apache.log4j.Logger;
 import org.lazywizard.lazylib.CollectionUtils;
 import starhacker.helper.StringHelper;
+
+import starhacker.impl.campaign.SH_HackablePlugin;
 
 import java.util.*;
 
@@ -19,7 +20,7 @@ import java.util.*;
 public class StarHackInteractionDialogPlugin implements InteractionDialogPlugin, Cloneable {
     public static final int ENTRIES_PER_PAGE = 6;
     public static Logger log = Global.getLogger(StarHackInteractionDialogPlugin.class);
-    protected static Collection<String> filter = Arrays.asList("comm_relay", "sensor_array", "nav_buoy");
+    protected static Collection<String> filter = Arrays.asList("sh_comm_relay", "sh_sensor_array", "sh_nav_buoy");
     protected static String STRING = "sh_hackdialogue";
 
     protected InteractionDialogAPI dialog;
@@ -69,8 +70,8 @@ public class StarHackInteractionDialogPlugin implements InteractionDialogPlugin,
 
     protected void populateHackingOptions() {
         CustomCampaignEntityPlugin plugin = token.getCustomPlugin();
-        if (plugin instanceof CampaignObjective) {
-            if (((CampaignObjective) plugin).isHacked())
+        if (plugin instanceof SH_HackablePlugin) {
+            if (((SH_HackablePlugin) plugin).hasBackdoor())
                 options.addOption("Remove the uploaded virus", Menu.REMOVE);
 
             Collection<String> filters = filter;
@@ -106,7 +107,7 @@ public class StarHackInteractionDialogPlugin implements InteractionDialogPlugin,
         
         for (SectorEntityToken token : this.nearby) {
             String name_fac = token.getName() + " - " + token.getFaction().getDisplayName();
-            optionsList.add(new Pair<String, Object> (name_fac, token));
+            optionsList.add(new Pair<String, Object> (name_fac, (SectorEntityToken)token));
         }
         showPaginatedMenu();
     }
@@ -138,22 +139,7 @@ public class StarHackInteractionDialogPlugin implements InteractionDialogPlugin,
     }
 
     /**
-     * This was when things started to get weird. It is possible that the original version was also having the issue
-     * of deleting the selected entity when dialog ended - but I was only focusing on getting through all the options.
-     * I feel like I remember seeing my remove virus option come up, which would mean that nothing was deleted, since
-     * it checks the entities isHacked boolean.
-     *
-     * So the big change I made here when I noticed the issue was changing how I track steps through the dialog tree.
-     * Initially I was only tracking lastselected menu. Issue was that you could not backtrack out of a multi-step tree.
-     * I ended up creating an array, and then when we step through the tree each Menu enum was added to the tree. If
-     * the player selected BACK from options, it would pop the current dialog frame from the end of the array, and then
-     * point at the preceding one when reaching populateOptions(). This worked really well!
-     *
-     * My worry though is that somehow, a reference that is pointing to the entity instance is either getting nullified,
-     * or otherwise hung up. I've tried remove all hard references to the entity by using IDs instead. But no luck.
-     *
-     * So now, if you end up here with the option BACK selected, and the currentMenu is set to BACK, the dialog close
-     * function is called. Otherwise, it loads whatever menu was on the index.
+     * Hacks.
      */
     public void optionSelected(String optionText, Object optionData) {
         int oldPage = currentPage;

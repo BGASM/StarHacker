@@ -87,7 +87,7 @@ Inspiration for this comes from books, television, and MUDs I have enjoyed, incl
    the various hacks are tied to it.
    </details>
 
-
+  
 ## Contributions
 I welcome any help. Hit the forum and post ideas or feedback. If you code, fork my repo, add shit, and throw 
 me a pull request and I'll check it out.

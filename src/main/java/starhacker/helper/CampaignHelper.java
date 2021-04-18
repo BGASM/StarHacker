@@ -212,5 +212,13 @@ public class CampaignHelper {
         log.info(map);
         return map;
     }
+
+    public static Boolean hasInterface(Class[] interfaces, Class someInterface){
+        for (Class i : interfaces) {
+            if (i.toString().equals(someInterface.toString()))
+                return true;
+        }
+        return false;
+    }
 }
 

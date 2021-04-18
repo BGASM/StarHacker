@@ -1,0 +1,89 @@
+{
+  "sh_comm_relay":{
+    "baseId":"base_campaign_objective",
+    "defaultName":"Comm Relay", # used if name=null in addCustomEntity()
+    "nameInText":"comm relay",
+    "shortName":"relay",
+    "icon":"graphics/icons/relay.png",
+    "iconWidth":24,
+    "iconHeight":24,
+    "sprite":"graphics/ships/com_relay.png",
+    "spriteWidth":89,
+    "spriteHeight":48,
+    "customDescriptionId":"sh_comm_relay",
+    "interactionImage":"graphics/illustrations/comm_relay.jpg",
+    "tags":["comm_relay", "neutrino_high", "objective","sh_hackable"],
+    "layers":[STATIONS], # what layer(s) to render in. See CampaignEngineLayers.java for possible values
+    "pluginClass":"starhacker.impl.campaign.SH_CommRelayEntityPlugin",
+  },
+
+  "sh_nav_buoy":{
+    "baseId":"base_campaign_objective",
+    "defaultName":"Nav Buoy", # used if name=null in addCustomEntity()
+    "nameInText":"nav buoy",
+    "shortName":"buoy",
+    "icon":"graphics/icons/nav_buoy.png",
+    "iconWidth":24,
+    "iconHeight":24,
+    "sprite":"graphics/ships/nav_buoy.png",
+    "spriteWidth":64,
+    "spriteHeight":64,
+    "customDescriptionId":"sh_nav_buoy",
+    "interactionImage":"graphics/illustrations/nav_buoy.jpg",
+    "tags":["nav_buoy", "neutrino_high", "objective", "sh_hackable"],
+    "layers":[STATIONS], # what layer(s) to render in. See CampaignEngineLayers.java for possible values
+    "pluginClass":"starhacker.impl.campaign.SH_NavBuoyEntityPlugin",
+  },
+
+  "sh_sensor_array":{
+    "baseId":"base_campaign_objective",
+    "defaultName":"Sensor Array", # used if name=null in addCustomEntity()
+    "nameInText":"sensor array",
+    "shortName":"array",
+    "icon":"graphics/icons/sensor_array.png",
+    "iconWidth":24,
+    "iconHeight":24,
+    "sprite":"graphics/ships/sensor_array.png",
+    "spriteWidth":86,
+    "spriteHeight":86,
+    "customDescriptionId":"sh_sensor_array",
+    "interactionImage":"graphics/illustrations/sensor_array.jpg",
+    "tags":["sensor_array", "neutrino_high", "objective", "sh_hackable"],
+    "layers":[STATIONS], # what layer(s) to render in. See CampaignEngineLayers.java for possible values
+    "pluginClass":"starhacker.impl.campaign.SH_SensorArrayEntityPlugin",
+  },
+
+  "sh_comm_relay_makeshift":{
+    "baseId":"sh_comm_relay",
+    "defaultName":"Makeshift Comm Relay",
+    "icon":"graphics/icons/relay_makeshift.png",
+    "customDescriptionId":"sh_comm_relay_makeshift",
+    "sprite":"graphics/ships/com_relay_makeshift.png",
+    "spriteWidth":89,
+    "spriteHeight":48,
+    "tags":["comm_relay", "neutrino_high", "objective", "sh_hackable"],
+  },
+
+  "sh_nav_buoy_makeshift":{
+    "baseId":"sh_nav_buoy",
+    "defaultName":"Makeshift Nav Buoy",
+    "icon":"graphics/icons/nav_buoy_makeshift.png",
+    "customDescriptionId":"sh_nav_buoy_makeshift",
+    "sprite":"graphics/ships/nav_buoy_makeshift.png",
+    "spriteWidth":64,
+    "spriteHeight":64,
+    "tags":["nav_buoy", "neutrino_high", "objective", "sh_hackable"],
+  },
+
+  "sh_sensor_array_makeshift":{
+    "baseId":"sh_sensor_array",
+    "defaultName":"Makeshift Sensor Array",
+    "icon":"graphics/icons/sensor_array_makeshift.png",
+    "customDescriptionId":"sh_sensor_array_makeshift",
+    "interactionImage":"graphics/illustrations/sensor_array_makeshift.jpg",
+    "sprite":"graphics/ships/sensor_array_makeshift.png",
+    "spriteWidth":86,
+    "spriteHeight":86,
+    "tags":["sensor_array", "neutrino_high", "objective", "sh_hackable"],
+  },
+}

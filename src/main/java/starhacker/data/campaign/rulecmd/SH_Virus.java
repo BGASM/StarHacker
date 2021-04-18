@@ -4,7 +4,6 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.*;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.impl.campaign.CampaignObjective;
-import com.fs.starfarer.api.impl.campaign.intel.misc.CommSnifferIntel;
 import com.fs.starfarer.api.impl.campaign.rulecmd.BaseCommandPlugin;
 import com.fs.starfarer.api.util.Misc;
 import org.lazywizard.lazylib.MathUtils;
@@ -98,7 +97,7 @@ import java.util.*;
     }
 
     @Deprecated public void removeVirus() {
-        HacksPlugin.getCommSnifferIntel(entity);
+        HacksPlugin.getBackdoorIntel(entity);
         updateMemory();
     }
 
@@ -125,10 +124,7 @@ import java.util.*;
         return false;
     }
 
-    @Deprecated public void updateMemory() {
-        //memory.set("$cob_hacked", isHacked(), 0f);
-        //memory.set(BaseCampaignObjectivePlugin.HACKED, isHacked(), 0f);
-    }
+    @Deprecated public void updateMemory() {}
 
 
 

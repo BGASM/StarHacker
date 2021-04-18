@@ -1,7 +1,29 @@
 {
-	"graphics":{
-		"abilities":{
-			"starhack":"graphics/icons/abilities/hack_icon.png"
-		}
-	}
+	"graphics": {
+		"abilities": {
+			"starhack": "graphics/icons/abilities/hack_icon.png"
+		},
+		"campaignEntities": {
+			"comm_relay": "graphics/ships/com_relay.png",
+			"sensor_array": "graphics/ships/sensor_array.png",
+			"nav_buoy": "graphics/ships/nav_buoy.png"
+		},
+		"systemMap": {
+			"icon_relay": "graphics/icons/relay.png",
+			"icon_nav_buoy": "graphics/icons/nav_buoy.png",
+			"icon_sensor_array": "graphics/icons/sensor_array.png",
+			"icon_relay_makeshift": "graphics/icons/relay_makeshift.png",
+			"icon_nav_buoy_makeshift": "graphics/icons/nav_buoy_makeshift.png",
+			"icon_sensor_array_makeshift": "graphics/icons/sensor_array_makeshift.png"
+		},
+		"illustrations": {
+			"comm_relay": "graphics/illustrations/comm_relay.jpg",
+			"nav_buoy": "graphics/illustrations/nav_buoy.jpg",
+			"sensor_array": "graphics/illustrations/sensor_array.jpg",
+			"sensor_array_makeshift": "graphics/illustrations/sensor_array_makeshift.jpg"
+		},
+		"starhacker": {
+			"comms": "graphics/icons/intel/comms.png",
+		},
+	},
 }

@@ -26,11 +26,7 @@ public class StarHackAbility extends BaseDurationAbility {
      * When the Hack ability is used generate a list of nearby entities with the sh_hackable tag from my worldgen.
      * List of entities gets sent over to the StarHackInteractionDialog. Right now I only am tagging Campaign Objectives
      * because they already have built in 'hack()' functionality. It will expand to ships and markets when I learn
-     * wtf I am doing.
-     *
-     * I initially was using a list of SectorEntityTokens, but when I realized that entities were being lost,
-     * I switched to using their IDs to avoid having instances in Collections that may be nullified
-     * ... they are still getting lost.*/
+     * wtf I am doing.*/
     protected void activateImpl()
     {
         if (this.entity.isPlayerFleet()) {

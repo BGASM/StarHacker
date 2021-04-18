@@ -4,13 +4,14 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CustomCampaignEntityPlugin;
 import com.fs.starfarer.api.campaign.FactionAPI;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
-import com.fs.starfarer.api.impl.campaign.CampaignObjective;
-import com.fs.starfarer.api.impl.campaign.intel.misc.CommSnifferIntel;
 import com.fs.starfarer.api.util.Pair;
 import org.apache.log4j.Logger;
 import org.lazywizard.lazylib.CollectionUtils;
 import org.lazywizard.lazylib.MathUtils;
 import starhacker.helper.CampaignHelper;
+
+import starhacker.impl.campaign.SH_HackablePlugin;
+import starhacker.impl.campaign.intel.misc.BackdoorIntel;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -42,27 +43,27 @@ public class HacksPlugin {
     public static void uploadVirus(Collection<SectorEntityToken> tokens) {
         for (SectorEntityToken s : tokens) {
             CustomCampaignEntityPlugin plugin = s.getCustomPlugin();
-            if (plugin instanceof CampaignObjective) {
-                CampaignObjective o = (CampaignObjective) plugin;
+            if (plugin instanceof SH_HackablePlugin) {
+                SH_HackablePlugin o = (SH_HackablePlugin) plugin;
                 log.info("Hacking " + o);
-                o.setHacked(true);
+                o.setBackdoor(true);
             }
         }
     }
 
     public static void removeVirus(SectorEntityToken token) {
-        getCommSnifferIntel(token);
+        getBackdoorIntel(token);
     }
 
-    public static void getCommSnifferIntel(SectorEntityToken token) {
-        CommSnifferIntel intel = CommSnifferIntel.getExistingSnifferIntelForRelay(token);
+    public static void getBackdoorIntel(SectorEntityToken token) {
+        BackdoorIntel intel = BackdoorIntel.getBackdoorIntelForRelay(token);
         if (intel != null) {
             intel.uninstall();
         } else {
             CustomCampaignEntityPlugin plugin = token.getCustomPlugin();
-            if (plugin instanceof CampaignObjective) {
-                CampaignObjective o = (CampaignObjective) plugin;
-                o.setHacked(false);
+            if (plugin instanceof SH_HackablePlugin) {
+                SH_HackablePlugin o = (SH_HackablePlugin) plugin;
+                o.setBackdoor(false);
             }
         }
     }

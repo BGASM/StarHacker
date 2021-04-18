@@ -12,3 +12,5 @@ build/
 /data/
 /starhacker.version
 /mod_info.json
+/graphics/*
+/Scratch/*
