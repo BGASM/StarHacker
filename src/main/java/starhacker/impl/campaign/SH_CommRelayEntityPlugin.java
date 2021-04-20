@@ -9,9 +9,12 @@ import com.fs.starfarer.api.impl.campaign.CommRelayEntityPlugin;
 import com.fs.starfarer.api.impl.campaign.econ.CommRelayCondition;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
+import com.fs.starfarer.api.util.Pair;
 import org.apache.log4j.Logger;
+import starhacker.campaign.SectorManager;
 import starhacker.impl.campaign.intel.misc.CommRelayBackdoorIntel;
 import starhacker.plugins.BackdoorPlugin;
+
 
 import java.util.Iterator;
 
@@ -49,7 +52,7 @@ public class SH_CommRelayEntityPlugin extends SH_HackablePlugin implements Backd
             bonus = Math.abs(Math.round(CommRelayCondition.MAKESHIFT_COMM_RELAY_BONUS));
         }
 
-        text.addPara("      %s stability for same-faction colonies in system", pad, Misc.getHighlightColor(), new String[]{"+" + bonus});
+        text.addPara("      %s stability for same-faction colonies in system", pad, Misc.getHighlightColor(), "+" + bonus);
     }
 
     public void addHackStatusToTooltip(TooltipMakerAPI text, float pad) {
@@ -59,10 +62,10 @@ public class SH_CommRelayEntityPlugin extends SH_HackablePlugin implements Backd
         }
 
         if (this.isHacked()) {
-            text.addPara("%s stability for in-system colonies", pad, Misc.getHighlightColor(), new String[]{"+" + bonus});
+            text.addPara("%s stability for in-system colonies", pad, Misc.getHighlightColor(), "+" + bonus);
             text.addPara("Comm sniffer installed", Misc.getTextColor(), pad);
         } else {
-            text.addPara("%s stability for same-faction colonies in-system", pad, Misc.getHighlightColor(), new String[]{"+" + bonus});
+            text.addPara("%s stability for same-faction colonies in-system", pad, Misc.getHighlightColor(), "+" + bonus);
         }
 
     }
@@ -92,7 +95,7 @@ public class SH_CommRelayEntityPlugin extends SH_HackablePlugin implements Backd
             if (CommRelayBackdoorIntel.checkIntel(intel) && intel instanceof CommRelayEntityPlugin.CommSnifferReadableIntel) {
                 CommRelayEntityPlugin.CommSnifferReadableIntel csi = (CommRelayEntityPlugin.CommSnifferReadableIntel) intel;
                 if (csi.canMakeVisibleToCommSniffer(isConnected(), entity)) {
-                    intel.setForceAddNextFrame(true);
+                    SectorManager.getManager().addIntel(new Pair<SectorEntityToken, IntelInfoPlugin>(entity, intel));
                 }
             }
         }

@@ -2,8 +2,12 @@ package starhacker;
 
 import com.fs.starfarer.api.BaseModPlugin;
 import com.fs.starfarer.api.Global;
+import com.fs.starfarer.api.campaign.SectorAPI;
 import org.apache.log4j.Logger;
+import starhacker.campaign.SectorManager;
+import starhacker.ui.intel.StarHackerBoard;
 import starhacker.world.StarHackerNewGameSetup;
+
 
 /**
  * This Plugin code was shamelessly stolen from Histidine's Nexerelin mod.
@@ -30,6 +34,7 @@ public class StarHackerPlugin extends BaseModPlugin {
             Global.getSector().getCharacterData().addAbility("starhack");
         }
         Global.getSector().getPlayerFleet().addAbility("starhack");
+        addScripts();
 
     }
 
@@ -43,6 +48,7 @@ public class StarHackerPlugin extends BaseModPlugin {
             Global.getSector().getCharacterData().addAbility("starhack");
         }
         Global.getSector().getPlayerFleet().addAbility("starhack");
+        addScripts();
 
     }
 
@@ -91,6 +97,7 @@ public class StarHackerPlugin extends BaseModPlugin {
     @Override
     public void onNewGameAfterTimePass(){
         new StarHackerNewGameSetup().addTags();
+        addScripts();
     }
 
     /**
@@ -107,5 +114,11 @@ public class StarHackerPlugin extends BaseModPlugin {
     public void toggleOff(){
         Global.getSector().getCharacterData().removeAbility("starhack");
         Global.getSector().getPlayerFleet().removeAbility("starhack");
+    }
+
+    public static void addScripts() {
+        SectorAPI sector = Global.getSector();
+        sector.addScript(SectorManager.create());
+        StarHackerBoard.getInstance();
     }
 }

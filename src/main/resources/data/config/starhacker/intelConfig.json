@@ -1,0 +1,21 @@
+{
+  "intel": {
+    "COMM": {
+      "TIER0": [
+        "Analyze",
+        "Procurement",
+        "Delivery",
+        "System Bounty"
+      ],
+      "TIER1": [
+        "Analyze",
+        "Procurement",
+        "Delivery",
+        "System Bounty",
+        "Personal Bounty",
+        "Survey",
+        "Hostilities"
+      ]
+    }
+  }
+}
